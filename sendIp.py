@@ -22,6 +22,7 @@ sender_email = "sender@gmail.com"
 receiver_email = "receiver@gmail.com"
 password = "password"
 
+#gets the name of the raspberry pi (user)
 def whoiam()->str:
     result=subprocess.run(['whoami'],stdout=subprocess.PIPE)
     resstr=result.stdout.decode('utf-8')
@@ -32,7 +33,8 @@ def connected_to_internet(url='http://www.google.com/', timeout=5):
         something = requests.head(url, timeout=timeout)
         return True
     except requests.ConnectionError:
-        print("No internet connection available.")
+        #print("No internet connection available.")
+        return False
     return False
 
 
@@ -41,6 +43,7 @@ def learnip()->str:
     resstr=result.stdout.decode('utf-8')
     return resstr
 
+#this is sending html email
 def sendemail(emailmes,subjectmessage):
 
     message = MIMEMultipart("alternative")
@@ -76,6 +79,7 @@ while not isdone and numberofsecondsrunning < 300:
         webpage = urlopen(req).read()
         webpagestr = webpage.decode('utf-8')
         pos=webpagestr.find(secretkeyword)
+        #this if part can be omitted and the code can be changed so that raspberry pi sends ip when it connects internet.
         if pos >=0:
             iptext=learnip()
             raspberrypiname=whoiam()
